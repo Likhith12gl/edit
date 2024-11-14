@@ -27,16 +27,15 @@ const WhyVote = () => {
             <div className="row pt-120 pb-120">
               <div className="col-xxl-6 offset-xxl-2">
                 <div className="why-trade__part">
-                  <span className="heading fs-five">Why Vote </span>
-                  <h3 className="mb-3 mt-5">Candidate  (EC)</h3>
+                  <span className="heading fs-five">Why Donate </span>
+                  <h3 className="mb-3 mt-5">NGO</h3>
                   <p>
-                    Voting is a fundamental civic duty that empowers individuals
-                    to influence government decisions and policies.
+                  Donating to an NGO is vital as it provides the resources needed to carry out programs, support communities, and drive positive change. Each donation helps NGOs fulfill their mission, making a meaningful impact on society.
                   </p>
                   <Link href="/approve-voters">
                     <a className="cmn-btn link secondary-link fs-six-up  gap-2 gap-lg-3 align-items-center mt-5">
                       {" "}
-                      Check Voters{" "}
+                      Check doners{" "}
                       <i className="ti ti-arrow-narrow-right fs-four"></i>
                     </a>
                   </Link>
@@ -52,16 +51,14 @@ const WhyVote = () => {
                     />
                   </div>
                   <div className="content">
-                    <h3 className="mb-3">Power of Your Vote</h3>
+                    <h3 className="mb-3">Power of Your Donation</h3>
                     <p>
-                      By casting your vote, you contribute to the democratic
-                      process, ensuring that your voice and the collective will
-                      of the people are heard.
+                    Donations have the power to create real change by funding crucial programs, supporting communities in need, and tackling important issues like education, healthcare, and the environment. Every donation, big or small, contributes to building a better, more compassionate world.
                     </p>
                     <Link href="/approve-candidates">
                       <a className="cmn-btn link secondary-link fs-six-up  gap-2 gap-lg-3 align-items-center mt-5">
                         {" "}
-                        Check Candidates{" "}
+                        Check NGO{" "}
                         <i className="ti ti-arrow-narrow-right fs-four"></i>
                       </a>
                     </Link>

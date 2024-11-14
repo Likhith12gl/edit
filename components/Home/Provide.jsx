@@ -23,7 +23,7 @@ const Provide = () => {
                 <span className="s1-color"></span> 
               </h3>
               <p className="fs-six-up mx-ch mx-auto">
-              Voting is a fundamental duty as a citizen of nation.
+              Donate to help create positive change and support those in need.
               </p>
             </div>
           </div>
@@ -45,9 +45,9 @@ const Provide = () => {
               <span className="provide-card__icon d-center nb4-bg p-4 rounded-circle mx-auto">
                 <i className="ti ti-users fs-three p1-color"></i>
               </span>
-              <h4 className="mt-5 mb-5">Welcome to Democrochain</h4>
+              <h4 className="mt-5 mb-5">Welcome to Fundchain</h4>
               <p>
-              Join millions in shaping our nation's future by casting your vote. Every vote counts—be informed, get involved, and make a difference. Vote responsibly!
+              Join millions in shaping our nation's future by donating the needs. Every donate counts—be informed, get involved, and make a difference. Vote responsibly!
               </p>
             </div>
           </div>

@@ -26,11 +26,11 @@ const Vote = () => {
           <div className="col-lg-6 col-xxl-5">
             <div className="trade_on__content">
               <span className="heading s1-color fs-five mb-5">
-              Vote Through Democrochain
+              Vote Through Fundchain
               </span>
               <h3 className="mb-4 mb-lg-5">WHY TO VOTE THROUGH OUR DAPP</h3>
               <p className="fs-six mx-ch">
-              Voting in our blockchain DApp ensures transparency, security, and fairness in the election process. By leveraging blockchain technology, we provide a tamper-proof system where every vote is securely recorded and easily verifiable. Empower yourself and contribute to a more trustworthy electoral system by casting your vote in our innovative DApp.
+              Donating in our blockchain DApp ensures transparency, security, and fairness in the donation process. By leveraging blockchain technology, we provide a Secure system where every donate is securely recorded and easily verifiable. Empower yourself and contribute to a more trustworthy donation system by donating in our innovative DApp.
               </p>
               <ul className="d-flex gap-4 flex-column mt-6">
                 <li className="d-flex align-items-center gap-3 fs-six-up">

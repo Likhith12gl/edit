@@ -19,7 +19,7 @@ const Provide = () => {
                 We Provide World’s
               </span>
               <h3 className="mb-5 mb-lg-6">
-              Decentralized voting community{" "}
+              Decentralized Funding community{" "}
                 <span className="s1-color"></span> 
               </h3>
               <p className="fs-six-up mx-ch mx-auto">

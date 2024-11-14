@@ -41,14 +41,14 @@ const HeroSection = ({ initialData, higest }) => {
                   />
                 </div>
                 <span className="heading p1-max-xxl nb4-xxl-color fs-five mb-3">
-                  Decentralized Voting
+                  Transperent Donation
                 </span>
                 <h1 className="display-two nb4-xxl-color mb-5 mb-lg-6">
-                  Vote For your Favorite Candidate
+                  DONATE THE NEED
                 </h1>
                 <p className="fs-six-up fw_500 nb4-xxl-color">
-                  Now you can elect your  minister through the
-                  decentralized voting system
+                  Now you can donate the fund through the
+                  decentralized donating system
                 </p>
                 {initialData?.startDateN != 0 && initialData?.endDateN != 0 && (
                   <>
@@ -64,7 +64,7 @@ const HeroSection = ({ initialData, higest }) => {
                 <div className="d-inline-flex flex-wrap gap-4 gap-lg-10 align-items-center mt-8 mt-lg-10">
                   <Link href="/approve-candidates">
                     <a className="cmn-btn alt-xxl-bg fs-five nb4-xxl-bg gap-2 gap-lg-3 align-items-center py-2 px-5 py-lg-3 px-lg-6">
-                      All Candidates <i className="ti ti-trending-up"></i>
+                      NGO <i className="ti ti-trending-up"></i>
                     </a>
                   </Link>
                   {higest ? (
@@ -73,14 +73,14 @@ const HeroSection = ({ initialData, higest }) => {
                     >
                       <a className="cmn-btn link link-xxl-color fs-five  gap-2 gap-lg-3 align-items-center ">
                         <i className="ti ti-arrow-narrow-right fs-four"></i>
-                        Current Highest Voter
+                        Current Highest NGO
                       </a>
                     </Link>
                   ) : (
                     <Link href="/all-voters">
                       <a className="cmn-btn link link-xxl-color fs-five  gap-2 gap-lg-3 align-items-center ">
-                        <i className="ti ti-arrow-narrow-right fs-four"></i> All
-                        Voters
+                        <i className="ti ti-arrow-narrow-right fs-four"></i> 
+                        DONER
                       </a>
                     </Link>
                   )}

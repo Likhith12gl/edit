@@ -1,0 +1,917 @@
+index.gsp,
+<%@ page contentType="text/html;charset=UTF-8" %>
+<!doctype html>
+<html lang="en" data-bs-theme="blue-theme">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Updated Admin Dashboard</title>
+    <!-- Favicon -->
+    <asset:stylesheet src="favicon-32x32.png"/>
+    <!-- Loader -->
+    <asset:stylesheet src="pace.min.css"/>
+    <asset:javascript src="pace.min.js"/>
+    <!-- Plugins -->
+    <asset:stylesheet src="/perfect-scrollbar/css/perfect-scrollbar.css"/>
+    <asset:stylesheet src="/metismenu/metisMenu.min.css"/>
+    <asset:stylesheet src="/metismenu/mm-vertical.css"/>
+    <asset:stylesheet src="/simplebar/css/simplebar.css"/>
+    <!-- Bootstrap CSS -->
+    <asset:stylesheet src="bootstrap.min.css"/>
+    <asset:stylesheet src="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&display=swap"/>
+    <asset:stylesheet src="https://fonts.googleapis.com/css?family=Material+Icons+Outlined"/>
+    <!-- Main CSS -->
+    <asset:stylesheet src="bootstrap-extended.css"/>
+    <asset:stylesheet src="main.css"/>
+    <asset:stylesheet src="dark-theme.css"/>
+    <asset:stylesheet src="blue-theme.css"/>
+    <asset:stylesheet src="semi-dark.css"/>
+    <asset:stylesheet src="bordered-theme.css"/>
+    <asset:stylesheet src="responsive.css"/>
+    <asset:stylesheet src="datatable/css/dataTables.bootstrap5.min.css"/>
+</head>
+
+<body>
+
+<!-- Start Header -->
+<header class="top-header">
+    <nav class="navbar navbar-expand align-items-center gap-4">
+        <div class="btn-toggle">
+            <a href="javascript:"><i class="material-icons-outlined">menu</i></a>
+        </div>
+        <div class="search-bar flex-grow-1">
+            <div class="position-relative">
+                <input class="form-control rounded-5 px-5 search-control d-lg-block d-none" type="text" placeholder="Search">
+                <span class="material-icons-outlined position-absolute d-lg-block d-none ms-3 translate-middle-y start-0 top-50">search</span>
+                <span class="material-icons-outlined position-absolute me-3 translate-middle-y end-0 top-50 search-close">close</span>
+            </div>
+        </div>
+        <ul class="navbar-nav gap-1 nav-right-links align-items-center">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="javascript:" data-bs-toggle="dropdown">
+                    <asset:image src="avatars/01.png" class="rounded-circle p-1 border" width="45" height="45" alt=""/>
+                </a>
+                <div class="dropdown-menu dropdown-user dropdown-menu-end shadow">
+                    <a class="dropdown-item gap-2 py-2" href="javascript:">
+                        <div class="text-center">
+                            <asset:image src="avatars/01.png" class="rounded-circle p-1 shadow mb-3" width="90" height="90" alt=""/>
+                            <h5 class="user-name mb-0 fw-bold">
+                                Hello, ${user?.username ?: 'Guest'}
+                            </h5>
+                            <p class="user-email text-muted">${user?.email ?: 'Not logged in'}</p>
+                        </div>
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="${createLink(controller: 'user', action: 'profile')}"><i class="material-icons-outlined"></i>Profile</a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="${createLink(controller: 'user', action: 'login')}"><i class="material-icons-outlined"></i>Logout</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</header>
+<!-- End Header -->
+
+<!-- Start Sidebar -->
+<aside class="sidebar-wrapper" data-simplebar="true">
+    <div class="sidebar-header">
+        <div class="logo-icon">
+            <asset:image src="logo-icon.png" class="logo-img" alt="Logo" />
+        </div>
+        <div class="logo-name flex-grow-1">
+            <h5 class="mb-0">Admin Panel</h5>
+        </div>
+        <div class="sidebar-close">
+            <span class="material-icons-outlined">close</span>
+        </div>
+    </div>
+    <div class="sidebar-nav">
+        <ul class="metismenu" id="sidenav">
+            <li>
+                <a href="javascript:" data-bs-toggle="modal" data-bs-target="#addNewProjectModal">
+                    <div class="parent-icon"><i class="material-icons-outlined"></i></div>
+                    <div class="menu-title">Add New Project</div>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:" data-bs-toggle="modal" data-bs-target="#addNewCandidateModal">
+                    <div class="parent-icon"><i class="material-icons-outlined"></i></div>
+                    <div class="menu-title">Add New Candidate</div>
+                </a>
+            </li>
+            <li>
+                <a href="permissions.html">
+                    <div class="parent-icon"><i class="material-icons-outlined"></i></div>
+                    <div class="menu-title">Permissions</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</aside>
+<!-- End Sidebar -->
+
+<!-- Start Main Content -->
+<main class="main-wrapper">
+    <div class="main-content">
+        <!-- Breadcrumb -->
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="breadcrumb-title pe-3">Dashboard</div>
+            <div class="ps-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="index.html"><i class="bx bx-home-alt"></i></a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Projects</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- End Breadcrumb -->
+
+        <!-- Projects and Assigned Employees -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card rounded-4">
+                    <div class="card-header">
+                        <h4 class="mb-0">Current Projects</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Assigned Employees</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Project Alpha</td>
+                                <td>John, Alice, Robert</td>
+                                <td>In Progress</td>
+                            </tr>
+                            <tr>
+                                <td>Project Beta</td>
+                                <td>Mary, Chris</td>
+                                <td>Completed</td>
+                            </tr>
+                            <tr>
+                                <td>Project Gamma</td>
+                                <td>Emma, Daniel</td>
+                                <td>Pending</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Projects -->
+    </div>
+</main>
+<!-- End Main Content -->
+
+<!-- Modal for Add New Project -->
+<div class="modal fade" id="addNewProjectModal" tabindex="-1" aria-labelledby="addNewProjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNewProjectModalLabel">Add New Project</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="${createLink(controller: 'project', action: 'save')}">
+                    <div class="mb-3">
+                        <label for="projectName" class="form-label">Project Name</label>
+                        <input type="text" class="form-control" id="projectName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="projectDeadline" class="form-label">Project Deadline</label>
+                        <input type="date" class="form-control" id="projectDeadline" name="deadline" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Save Project</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Add New Candidate -->
+<div class="modal fade" id="addNewCandidateModal" tabindex="-1" aria-labelledby="addNewCandidateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNewCandidateModalLabel">Add New Candidate</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="${createLink(controller: 'candidate', action: 'save')}">
+                    <div class="mb-3">
+                        <label for="candidateName" class="form-label">Candidate Name</label>
+                        <input type="text" class="form-control" id="candidateName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="candidateRole" class="form-label">Role</label>
+                        <input type="text" class="form-control" id="candidateRole" name="role" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="candidatePassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="candidatePassword" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="assignedProject" class="form-label">Assign Project</label>
+                        <select class="form-select" id="assignedProject" name="projectId" required>
+                        <!-- Populate this dynamically with projects -->
+                            <g:each in="${projects}" var="project">
+                                <option value="${project.id}">${project.name}</option>
+                            </g:each>
+                        </select>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Save Candidate</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<asset:javascript src="jquery.min.js"/>
+<asset:javascript src="bootstrap.bundle.min.js"/>
+<asset:javascript src="metisMenu.min.js"/>
+<asset:javascript src="perfect-scrollbar.min.js"/>
+<asset:javascript src="simplebar.min.js"/>
+<asset:javascript src="custom.js"/>
+
+<script>
+    $(document).ready(function () {
+        // Handling Add Project Form Submission
+        $('#addNewProjectForm').submit(function (event) {
+            event.preventDefault();
+            var projectName = $('#projectName').val();
+            var projectDeadline = $('#projectDeadline').val();
+            $.ajax({
+                url: '/project/save',
+                type: 'POST',
+                data: { name: projectName, deadline: projectDeadline },
+                success: function (response) {
+                    alert('Project saved successfully');
+                    location.reload();
+                },
+                error: function () {
+                    alert('Error saving project');
+                }
+            });
+        });
+
+        // Handling Add Candidate Form Submission
+        $('#addNewCandidateForm').submit(function (event) {
+            event.preventDefault();
+            var candidateName = $('#candidateName').val();
+            var candidateRole = $('#candidateRole').val();
+            var candidatePassword = $('#candidatePassword').val();
+            var assignedProject = $('#assignedProject').val();
+            $.ajax({
+                url: '/candidate/save',
+                type: 'POST',
+                data: { name: candidateName, role: candidateRole, password: candidatePassword, projectId: assignedProject },
+                success: function (response) {
+                    alert('Candidate added successfully');
+                    location.reload();
+                },
+                error: function () {
+                    alert('Error adding candidate');
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
+register.gsp,
+<%@ page contentType="text/html;charset=UTF-8" %>
+
+<!doctype html>
+<html lang="en" data-bs-theme="blue-theme">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maxton | Bootstrap 5 Admin Dashboard Template</title>
+    <!--favicon-->
+    <asset:stylesheet src="favicon-32x32.png"/>
+    <!-- loader-->
+    <asset:stylesheet src="pace.min.css"/>
+    <asset:javascript src="pace.min.js"/>
+
+    <!--plugins-->
+    <asset:stylesheet src="perfect-scrollbar/css/perfect-scrollbar.css"/>
+    <asset:stylesheet src="metismenu/metisMenu.min.css"/>
+    <asset:stylesheet src="metismenu/mm-vertical.css"/>
+    <!--bootstrap css-->
+    <asset:stylesheet src="bootstrap.min.css"/>
+    <asset:stylesheet src="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&display=swap"/>
+    <asset:stylesheet src="https://fonts.googleapis.com/css?family=Material+Icons+Outlined"/>
+    <!--main css-->
+    <asset:stylesheet src="bootstrap-extended.css"/>
+    <asset:stylesheet src="main.css"/>
+    <asset:stylesheet src="dark-theme.css"/>
+    <asset:stylesheet src="blue-theme.css"/>
+    <asset:stylesheet src="responsive.css"/>
+
+</head>
+
+<body>
+
+<!--authentication-->
+<div class="auth-basic-wrapper d-flex align-items-center justify-content-center">
+    <div class="container-fluid my-5 my-lg-0">
+        <div class="row">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4 mx-auto">
+                <div class="card rounded-4 mb-0 border-top border-4 border-primary border-gradient-1">
+                    <div class="card-body p-5">
+                        <h4 class="fw-bold">Register Now</h4>
+                        <p class="mb-0">Fill in your details to create an account</p>
+
+                        <div class="form-body my-5">
+                            <form class="row g-3" method="post" action="${createLink(controller: 'user', action: 'save')}">
+                                <div class="col-12">
+                                    <label for="inputUsername" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Enter Username" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="inputEmailAddress" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="inputEmailAddress" name="email" placeholder="jhon@example.com" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="inputChoosePassword" class="form-label">Password</label>
+                                    <div class="input-group" id="show_hide_password">
+                                        <input type="password" class="form-control border-end-0" id="inputChoosePassword" name="password" placeholder="Enter Password" required>
+                                        <a href="javascript:" class="input-group-text bg-transparent"><i class="bi bi-eye-slash-fill"></i></a>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-grd-primary">Register</button>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="text-start">
+                                        <p class="mb-0">Already have an account? <a href="${createLink(controller: 'user', action: 'login')}">Login here</a></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div><!--end row-->
+    </div>
+</div>
+<!--authentication-->
+
+<!--plugins-->
+<asset:javascript src="jquery.min.js"/>
+
+<script>
+    $(document).ready(function () {
+        const passwordInput = $('#show_hide_password input');
+        const toggleIcon = $('#show_hide_password i');
+
+        $("#show_hide_password a").on('click', function (event) {
+            event.preventDefault();
+            if (passwordInput.attr("type") === "text") {
+                passwordInput.attr('type', 'password');
+                toggleIcon.addClass("bi-eye-slash-fill").removeClass("bi-eye-fill");
+            } else {
+                passwordInput.attr('type', 'text');
+                toggleIcon.removeClass("bi-eye-slash-fill").addClass("bi-eye-fill");
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
+userprofile.gsp,
+<!doctype html>
+<html lang="en" data-bs-theme="blue-theme">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maxton | Bootstrap 5 Admin Dashboard Template</title>
+    <!--favicon-->
+    <asset:image src="favicon-32x32.png" type="image/png" />
+    <!-- loader-->
+    <asset:stylesheet src="pace.min.css"/>
+    <asset:javascript src="pace.min.js"/>
+    <!--plugins-->
+    <asset:stylesheet src="perfect-scrollbar/css/perfect-scrollbar.css"/>
+    <asset:stylesheet src="metismenu/metisMenu.min.css"/>
+    <asset:stylesheet src="metismenu/mm-vertical.css"/>
+    <asset:stylesheet src="simplebar/css/simplebar.css"/>
+    <!--bootstrap css-->
+    <asset:stylesheet src="bootstrap.min.css"/>
+    <asset:stylesheet src="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&display=swap"/>
+    <asset:stylesheet src="https://fonts.googleapis.com/css?family=Material+Icons+Outlined"/>
+    <!--main css-->
+    <asset:stylesheet src="bootstrap-extended.css"/>
+    <asset:stylesheet src="main.css"/>
+    <asset:stylesheet src="dark-theme.css"/>
+    <asset:stylesheet src="blue-theme.css"/>
+    <asset:stylesheet src="semi-dark.css"/>
+    <asset:stylesheet src="bordered-theme.css"/>
+    <asset:stylesheet src="responsive.css"/>
+</head>
+<body>
+<!--start header-->
+<header class="top-header">
+    <nav class="navbar navbar-expand align-items-center gap-4">
+        <div class="btn-toggle">
+            <a href="${createLink(controller: 'user', action: 'dashboard')}"><i class="material-icons-outlined">dashboard</i></a>
+        </div>
+        <ul class="navbar-nav gap-1 nav-right-links align-items-center">
+            <li class="nav-item dropdown">
+                <a href="javascrpt:" class="dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown">
+                    <asset:image src="avatars/01.png" class="rounded-circle" width="45" height="45" alt=""/>
+                </a>
+                <div class="dropdown-menu dropdown-user dropdown-menu-end shadow">
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="${createLink(controller: 'user', action: 'profile')}">
+                        <i class="material-icons-outlined">person_outline</i>Profile
+                    </a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="${createLink(controller: 'user', action: 'dashboard')}">
+                        <i class="material-icons-outlined">dashboard</i>Dashboard
+                    </a>
+                    <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="${createLink(controller: 'user', action: 'logout')}">
+                        <i class="material-icons-outlined">power_settings_new</i>Logout
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+</header>
+<!--end top header-->
+<!--start main wrapper-->
+<main class="main-wrapper">
+    <div class="main-content">
+        <!--breadcrumb-->
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="breadcrumb-title pe-3">Update Profile</div>
+            <div class="ps-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="${createLink(controller: 'user', action: 'dashboard')}"><i class="bx bx-home-alt"></i></a></li>
+                        <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!--end breadcrumb-->
+        <div class="card rounded-4 border-top border-4 border-primary border-gradient-1">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-start justify-content-between mb-3">
+                    <div class="">
+                        <h5 class="mb-0 fw-bold">Edit Profile</h5>
+                    </div>
+                </div>
+                <g:if test="${flash.message}">
+                    <div class="alert alert-info">${flash.message}</div>
+                </g:if>
+                <g:form action="updateProfile" method="post" class="row g-4">
+                    <div class="col-md-6">
+                        <label for="input1" class="form-label">First Name</label>
+                        <g:textField name="firstName" value="${user.firstName}" class="form-control" id="input1" placeholder="First Name"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="input2" class="form-label">Last Name</label>
+                        <g:textField name="lastName" value="${user.lastName}" class="form-control" id="input2" placeholder="Last Name"/>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="input3" class="form-label">Phone</label>
+                        <g:textField name="phone" value="${user.phone}" class="form-control" id="input3" placeholder="Phone"/>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="input4" class="form-label">Email</label>
+                        <g:field type="email" name="email" value="${user.email}" class="form-control" id="input4"/>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="input5" class="form-label">Password</label>
+                        <g:passwordField name="password" class="form-control" id="input5"/>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="input6" class="form-label">DOB</label>
+                        <g:datePicker name="dob" value="${user.dob}" class="form-control" id="input6"/>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="input7" class="form-label">Country</label>
+                        <g:select name="country" from="${['USA', 'Canada', 'UK', 'Australia']}" value="${user.country}" class="form-select" id="input7"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="input8" class="form-label">City</label>
+                        <g:textField name="city" value="${user.city}" class="form-control" id="input8" placeholder="City"/>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="input9" class="form-label">State</label>
+                        <g:select name="state" from="${['State1', 'State2', 'State3']}" value="${user.state}" class="form-select" id="input9"/>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="input10" class="form-label">Zip</label>
+                        <g:textField name="zip" value="${user.zip}" class="form-control" id="input10" placeholder="Zip"/>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="input11" class="form-label">Address</label>
+                        <g:textArea name="address" value="${user.address}" class="form-control" id="input11" placeholder="Address ..." rows="4" cols="4"/>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="d-md-flex d-grid align-items-center gap-3">
+                            <button type="submit" class="btn btn-grd-primary px-4">Update Profile</button>
+                            <button type="reset" class="btn btn-light px-4">Reset</button>
+                        </div>
+                    </div>
+                </g:form>
+            </div>
+        </div>
+    </div>
+</main>
+<!--end main wrapper-->
+<!--start footer-->
+<footer class="page-footer">
+    <p class="mb-0">Copyright © 2024. All right reserved.</p>
+</footer>
+<!--top footer-->
+<!--bootstrap js-->
+<asset:javascript src="bootstrap.bundle.min.js"/>
+<!--plugins-->
+<asset:javascript src="jquery.min.js"/>
+<!--plugins-->
+<asset:javascript src="perfect-scrollbar/js/perfect-scrollbar.js"/>
+<asset:javascript src="metismenu/metisMenu.min.js"/>
+<asset:javascript src="simplebar/js/simplebar.min.js"/>
+<asset:javascript src="main.js"/>
+</body>
+</html>
+
+authbasiclogin.gsp,
+<%@ page contentType="text/html;charset=UTF-8" %>
+
+<!doctype html>
+<html lang="en" data-bs-theme="blue-theme">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maxton | Bootstrap 5 Admin Dashboard Template</title>
+    <!--favicon-->
+    <asset:stylesheet src="favicon-32x32.png"/>
+    <!-- loader-->
+    <asset:stylesheet src="pace.min.css"/>
+    <asset:javascript src="pace.min.js"/>
+
+    <!--plugins-->
+    <asset:stylesheet src="perfect-scrollbar/css/perfect-scrollbar.css"/>
+    <asset:stylesheet src="metismenu/metisMenu.min.css"/>
+    <asset:stylesheet src="metismenu/mm-vertical.css"/>
+    <!--bootstrap css-->
+    <asset:stylesheet src="bootstrap.min.css"/>
+    <asset:stylesheet src="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&display=swap"/>
+    <asset:stylesheet src="https://fonts.googleapis.com/css?family=Material+Icons+Outlined"/>
+    <!--main css-->
+    <asset:stylesheet src="bootstrap-extended.css"/>
+    <asset:stylesheet src="main.css"/>
+    <asset:stylesheet src="dark-theme.css"/>
+    <asset:stylesheet src="blue-theme.css"/>
+    <asset:stylesheet src="responsive.css"/>
+
+</head>
+
+<body>
+
+<!--authentication-->
+<div class="auth-basic-wrapper d-flex align-items-center justify-content-center">
+    <div class="container-fluid my-5 my-lg-0">
+        <div class="row">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4 mx-auto">
+                <div class="card rounded-4 mb-0 border-top border-4 border-primary border-gradient-1">
+                    <div class="card-body p-5">
+                        <h4 class="fw-bold">Get Started Now</h4>
+                        <p class="mb-0">Enter your credentials to login your account</p>
+
+                        <div class="form-body my-5">
+                            <form class="row g-3" method="post" action="${createLink(controller: 'user', action: 'authenticate')}">
+                                <div class="col-12">
+                                    <label for="inputEmailAddress" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="inputEmailAddress" name="email" placeholder="jhon@example.com" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="inputChoosePassword" class="form-label">Password</label>
+                                    <div class="input-group" id="show_hide_password">
+                                        <input type="password" class="form-control border-end-0" id="inputChoosePassword" name="password" placeholder="Enter Password" required>
+                                        <a href="javascript:" class="input-group-text bg-transparent"><i class="bi bi-eye-slash-fill"></i></a>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-grd-primary" name="login" value="Login">Login</button>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="text-start">
+                                        <p class="mb-0">Don't have an account yet? <a href="${createLink(controller: 'user', action: 'index')}">Sign up here</a></p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div><!--end row-->
+    </div>
+</div>
+<!--authentication-->
+
+<!--plugins-->
+<asset:javascript src="jquery.min.js"/>
+
+<script>
+    $(document).ready(function () {
+        const passwordInput = $('#show_hide_password input');
+        const toggleIcon = $('#show_hide_password i');
+
+        $("#show_hide_password a").on('click', function (event) {
+            event.preventDefault();
+            if (passwordInput.attr("type") === "text") {
+                passwordInput.attr('type', 'password');
+                toggleIcon.addClass("bi-eye-slash-fill").removeClass("bi-eye-fill");
+            } else {
+                passwordInput.attr('type', 'text');
+                toggleIcon.removeClass("bi-eye-slash-fill").addClass("bi-eye-fill");
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
+
+authbasicforgotpassrord.gsp,<%@ page contentType="text/html;charset=UTF-8" %>
+
+<!doctype html>
+<html lang="en" data-bs-theme="blue-theme">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maxton | Bootstrap 5 Admin Dashboard Template</title>
+    <!--favicon-->
+    <asset:stylesheet src="favicon-32x32.png"/>
+    <!-- loader-->
+    <asset:stylesheet src="pace.min.css"/>
+    <asset:javascript src="pace.min.js"/>
+
+    <!--plugins-->
+    <asset:stylesheet src="perfect-scrollbar/css/perfect-scrollbar.css"/>
+    <asset:stylesheet src="metismenu/metisMenu.min.css"/>
+    <asset:stylesheet src="metismenu/mm-vertical.css"/>
+    <!--bootstrap css-->
+    <asset:stylesheet src="bootstrap.min.css"/>
+    <asset:stylesheet src="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&display=swap"/>
+    <asset:stylesheet src="https://fonts.googleapis.com/css?family=Material+Icons+Outlined"/>
+    <!--main css-->
+    <asset:stylesheet src="bootstrap-extended.css"/>
+    <asset:stylesheet src="main.css"/>
+    <asset:stylesheet src="dark-theme.css"/>
+    <asset:stylesheet src="blue-theme.css"/>
+    <asset:stylesheet src="responsive.css"/>
+</head>
+
+<body>
+
+<!--authentication-->
+<div class="auth-basic-wrapper d-flex align-items-center justify-content-center">
+    <div class="container-fluid my-5 my-lg-0">
+        <div class="row">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4 mx-auto">
+                <div class="card rounded-4 mb-0 border-top border-4 border-primary border-gradient-1">
+                    <div class="card-body p-5">
+                        <%-- Replace this with dynamic asset tag if required --%>
+%{--                        <asset:image src="logo1.png" class="mb-4" width="145" alt=""/>--}%
+                        <h4 class="fw-bold">Forgot Password?</h4>
+                        <p class="mb-0">Enter your registered email ID to reset the password</p>
+
+                        <div class="form-body my-5">
+                            <g:form class="row g-3">
+                                <div class="col-12">
+                                    <label for="emailId" class="form-label">Email</label>
+                                    <g:textField name="email" class="form-control" id="emailId" placeholder="example@user.com"/>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-grid gap-2">
+                                        <g:submitButton name="sendEmail" class="btn btn-grd-warning" value="Send"/>
+                                        <a href="${createLink(controller: 'user', action: 'login')}" class="btn btn-light">Back to Login</a>
+                                    </div>
+                                </div>
+                            </g:form>
+                        </div>
+
+                        <div class="d-flex gap-3 justify-content-center mt-4">
+                            <a href="javascript:" class="wh-42 d-flex align-items-center justify-content-center rounded-circle bg-grd-danger">
+                                <i class="bi bi-google fs-5 text-white"></i>
+                            </a>
+                            <a href="javascript:" class="wh-42 d-flex align-items-center justify-content-center rounded-circle bg-grd-deep-blue">
+                                <i class="bi bi-facebook fs-5 text-white"></i>
+                            </a>
+                            <a href="javascript:" class="wh-42 d-flex align-items-center justify-content-center rounded-circle bg-grd-info">
+                                <i class="bi bi-linkedin fs-5 text-white"></i>
+                            </a>
+                            <a href="javascript:" class="wh-42 d-flex align-items-center justify-content-center rounded-circle bg-grd-royal">
+                                <i class="bi bi-github fs-5 text-white"></i>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div><!--end row-->
+    </div>
+</div>
+<!--authentication-->
+
+<!--plugins-->
+<asset:javascript src="jquery.min.js"/>
+
+<script>
+    $(document).ready(function () {
+        const passwordInput = $('#show_hide_password input');
+        const toggleIcon = $('#show_hide_password i');
+
+        $("#show_hide_password a").on('click', function (event) {
+            event.preventDefault();
+            if (passwordInput.attr("type") === "text") {
+                passwordInput.attr('type', 'password');
+                toggleIcon.addClass("bi-eye-slash-fill").removeClass("bi-eye-fill");
+            } else {
+                passwordInput.attr('type', 'text');
+                toggleIcon.removeClass("bi-eye-slash-fill").addClass("bi-eye-fill");
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
+domain-user,
+package organization
+
+import org.bson.types.ObjectId
+
+class User {
+    ObjectId id
+    String username
+    String email
+    String password
+    String firstName
+    String lastName
+    String phone
+    Date dob
+    String country
+    String city
+    String state
+    String zip
+    String address
+
+    static constraints = {
+        username blank: false, nullable: false
+        email email: true, blank: false, nullable: false
+        password blank: false, nullable: false
+        firstName blank: true, nullable: true
+        lastName blank: true, nullable: true
+        phone blank: true, nullable: true
+        dob blank: true, nullable: true
+        country blank: true, nullable: true
+        city blank: true, nullable: true
+        state blank: true, nullable: true
+        zip blank: true, nullable: true
+        address blank: true, nullable: true
+    }
+
+    static mapping = {
+        collection "organization" // Optional: MongoDB collection name
+    }
+}
+
+controller-usercontroller,
+package organization
+
+import grails.gorm.transactions.Transactional
+
+class UserController {
+
+    def index() {
+        // Renders the registration view (register.gsp)
+        render(view: "register")
+    }
+
+    def dashboard() {
+        if (!session.user) {
+            // If user is not logged in, redirect to login page
+            flash.message = "Please login first"
+            redirect(action: "login")
+            return
+        }
+        flash.message = "Welcome, ${session.user.username}"
+        render(view: "index")
+    }
+
+    def login() {
+        // Renders the login view (auth-basic-login.gsp)
+        render(view: "auth-basic-login")
+    }
+
+    def forgotpassword() {
+        // Renders the forgot password view (auth-basic-forgot-password.gsp)
+        render(view: "auth-basic-forgot-password")
+    }
+
+    def profile() {
+        if (!session.user) {
+            // If user is not logged in, redirect to login page
+            redirect(action: "login")
+            return
+        }
+        // Pass the logged-in user's information to the profile view
+        render(view: "user-profile", model: [user: session.user])
+    }
+
+    @Transactional
+    def save() {
+        // Creates a new user with the provided parameters from the registration form
+        def user = new User(params)
+        // Saves the user to the database
+        if (user.save(flush: true)) {
+            // If save is successful, display a success message and redirect to the login page
+            flash.message = "User registered successfully"
+            redirect(action: "login")
+        } else {
+            // If save fails, display an error message and render the registration view again
+            flash.message = "Failed to register user"
+            render(view: "register", model: [user: user])
+        }
+    }
+
+    @Transactional
+    def updateProfile() {
+        def user = User.get(session.user.id)
+        if (user) {
+            // Update user profile with the provided parameters
+            user.properties = params
+            if (user.save(flush: true)) {
+                flash.message = "Profile updated successfully"
+                session.user = user // Update session user
+                redirect(action: "profile")
+            } else {
+                flash.message = "Failed to update profile"
+                render(view: "user-profile", model: [user: user])
+            }
+        } else {
+            flash.message = "User not found"
+            redirect(action: "login")
+        }
+    }
+
+    def authenticate() {
+        def user = User.findByEmailAndPassword(params.email, params.password)
+        if (user) {
+            session.user = user // store user info in session
+            flash.message = "Login successful"
+            flash.loggedInUser = user.username
+            redirect(controller: "user", action: "dashboard")
+        } else {
+            flash.message = "Invalid email or password. Please enter correct info"
+            render(view: "auth-basic-login")
+        }
+    }
+}
+
+urlmapping,package organization
+
+class UrlMappings {
+
+    static mappings = {
+        "/user/updateProfile"(controller: "user",action: "updateProfile")
+        "/register"(controller: "user", action: "index")
+        "/save"(controller: "user", action: "save")
+        "/user-profile"(controller: "user", action: "profile")
+        "/user/authenticate"(controller: "user",action: "authenticate")
+        "/"(controller: "user", action: "index")
+        "/user/index"(controller: "user", action: "dashboard")
+        "/user/auth-basic-login"(controller: "user",action: "login")
+        "/user/auth-basic-forgot-password"(controller: "user",action: "forgotpassword")
+        "500"(view: '/error')
+        "404"(view: '/notFound')
+    }
+}
